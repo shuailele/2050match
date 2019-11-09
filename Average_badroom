@@ -16,7 +16,7 @@ double compare(Message *p);
 void show(double price);
 
 int main() {
-    cout<<"½«ÒªÊäÈë¼¸×éÊý¾Ý:"<<endl;
+    cout<<"å°†è¦è¾“å…¥å‡ ç»„æ•°æ®:"<<endl;
     int n;
     cin>>n;
     Message *p=new Message[n];
@@ -33,7 +33,7 @@ int main() {
 
 void input(Message *p)
 {
-        cout<<"Çë·Ö±ðÊäÈëÄÐÉúÈËÊý£¬Å®ÉúÈËÊý£¬ÇéÂÂ¶ÔÊý£¬Ë«ÈË¼ä£¬ÈýÈË¼äÒÔ¼°ÇéÂÂ·¿µÄ¼Û¸ñ"<<endl;
+        cout<<"è¯·åˆ†åˆ«è¾“å…¥ç”·ç”Ÿäººæ•°ï¼Œå¥³ç”Ÿäººæ•°ï¼Œæƒ…ä¾£å¯¹æ•°ï¼ŒåŒäººé—´ï¼Œä¸‰äººé—´ä»¥åŠæƒ…ä¾£æˆ¿çš„ä»·æ ¼"<<endl;
         cin>>p->n>>p->m>>p->k>>p->a>>p->b>>p->c;
 }
 
@@ -119,6 +119,6 @@ double compare(Message *p)
 
 void show(double price)
 {
-    cout<<"ËùÓÐÈË×¡ÏÂÀ´µÄ×îÐ¡»¨·ÑÎª:";
+    cout<<"æ‰€æœ‰äººä½ä¸‹æ¥çš„æœ€å°èŠ±è´¹ä¸º:";
     cout<<price<<endl<<endl;
 }
