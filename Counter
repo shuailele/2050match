@@ -1,0 +1,289 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+
+const int YEAR=2049;
+const int MONTH=1;
+const int DAY=1;
+const int HOUR=0;
+const int MINUTE=0;
+const int SEC=0;
+
+const int size=1;
+
+class Time
+{
+public:
+    Time(int y, int m, int d, int h, int z, int s):hour(h), minute(z), sec(s), year(y), month(m), day(d){}
+    Time(){hour=0; minute=0; sec=0; year=0; month=0; day=0;}
+    void SetHour(int h) {hour=h;}
+    void SetMinute(int m) {minute=m;}
+    void SetSec(int s) {sec=s;}
+    int GetHour() const {return hour;}
+    int GetMinute() const {return minute;}
+    int GetSec() const {return sec;}
+    void SetYear(int y) {year=y;}
+    void SetMonth(int m) {month=m;}
+    void SetDay(int d) {day=d;}
+    int GetYear() const {return year;}
+    int GetMonth() const {return month;}
+    int GetDay() const {return day;}
+    void differ_sec(Time & time);
+    void differ_minute(Time &time);
+    void differ_hour(Time &time);
+    void differ_day(Time &time);
+    void differ_month(Time &time);
+    void differ_year(Time &time);
+    friend long long convert(Time &time);
+private:
+    int hour;
+    int minute;
+    int sec;
+    int year;
+    int month;
+    int day;
+};
+
+void Time::differ_sec(Time &time)
+{
+    if((time.year>YEAR)||(time.year>=YEAR && time.month>MONTH)||(time.year>=YEAR && time.month>=MONTH && time.day>MONTH)||
+       (time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>HOUR)||
+       (time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>=HOUR && time.minute>MINUTE)
+       ||(time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>=HOUR && time.minute>=MINUTE && time.sec>=SEC))
+    {
+        time.sec=time.sec-SEC;
+        if(time.sec<0)
+        {
+            time.minute--;
+            differ_minute(time);
+            time.sec+=60;
+        }
+        else differ_minute(time);
+    }
+    else
+    {
+        time.sec=SEC-time.sec;
+        if(time.sec<0)
+        {
+            time.minute++;
+            differ_minute(time);
+            time.sec+=60;
+        }
+        else differ_minute(time);
+    }
+}
+
+void Time::differ_minute(Time &time)
+{
+    if((time.year>YEAR)||(time.year>=YEAR && time.month>MONTH)||(time.year>=YEAR && time.month>=MONTH && time.day>MONTH)||
+       (time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>HOUR)||
+       (time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>=HOUR && time.minute>MINUTE)
+       ||(time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>=HOUR && time.minute>=MINUTE && time.sec>=SEC))
+    {
+        time.minute=time.minute-MINUTE;
+        if(time.minute<0)
+        {
+            time.hour--;
+            differ_hour(time);
+            time.minute+=60;
+        }
+        else differ_hour(time);
+    }
+    else
+    {
+        time.minute=MINUTE-time.minute;
+        if(time.minute<0)
+        {
+            time.hour++;
+            differ_hour(time);
+            time.minute+=60;
+        }
+        else differ_hour(time);
+    }
+}
+
+void Time::differ_hour(Time &time)
+{
+    if((time.year>YEAR)||(time.year>=YEAR && time.month>MONTH)||(time.year>=YEAR && time.month>=MONTH && time.day>MONTH)||
+       (time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>HOUR)||
+       (time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>=HOUR && time.minute>MINUTE)
+       ||(time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>=HOUR && time.minute>=MINUTE && time.sec>=SEC))
+    {
+        time.hour=time.hour-HOUR;
+        if(time.hour<0)
+        {
+            time.day--;
+            differ_day(time);
+            time.hour+=24;
+        }
+        else differ_day(time);
+    }
+    else
+    {
+        time.hour=HOUR-time.hour;
+        if(time.hour<0)
+        {
+            time.day++;
+            differ_day(time);
+            time.hour+=24;
+        }
+        else differ_day(time);
+    }
+}
+
+void Time::differ_day(Time &time)
+{
+    if((time.year>YEAR)||(time.year>=YEAR && time.month>MONTH)||(time.year>=YEAR && time.month>=MONTH && time.day>MONTH)||
+       (time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>HOUR)||
+       (time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>=HOUR && time.minute>MINUTE)
+       ||(time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>=HOUR && time.minute>=MINUTE && time.sec>=SEC))
+    {
+        time.day=time.day-DAY;
+        if(time.day<0)
+        {
+            int month_log=time.month;
+            time.month--;
+            switch (month_log)
+            {
+                case 1:time.day+=31;break;
+                case 3:time.day+=31;break;
+                case 5:time.day+=31;break;
+                case 7:time.day+=31;break;
+                case 8:time.day+=31;break;
+                case 10:time.day+=31;break;
+                case 12:time.day+=31;break;
+                case 4:time.day+=30;break;
+                case 6:time.day+=30;break;
+                case 9:time.day+=30;break;
+                case 11:time.day+=30;break;
+                case 2:
+                    if((time.year%400==0)||(time.year%4==0&&time.year%100!=0)) {time.day+=29;break;}
+                    else {time.day+=28;break;}
+            }
+            differ_month(time);
+        }
+        else differ_month(time);
+    }
+    else
+    {
+        time.day=DAY-time.day;
+        if(time.day<0) {
+            int month_log = time.month;
+            time.month++;
+            switch (month_log)
+            {
+                case 1:time.day+=31;break;
+                case 3:time.day+=31;break;
+                case 5:time.day+=31;break;
+                case 7:time.day+=31;break;
+                case 8:time.day+=31;break;
+                case 10:time.day+=31;break;
+                case 12:time.day+=31;break;
+                case 4:time.day+=30;break;
+                case 6:time.day+=30;break;
+                case 9:time.day+=30;break;
+                case 11:time.day+=30;break;
+                case 2:
+                    if((time.year%400==0)||(time.year%4==0&&time.year%100!=0)) {time.day+=29;break;}
+                    else {time.day+=28;break;}
+            }
+            differ_month(time);
+        }
+        else differ_month(time);
+    }
+}
+
+void Time::differ_month(Time &time)
+{
+    if((time.year>YEAR)||(time.year>=YEAR && time.month>MONTH)||(time.year>=YEAR && time.month>=MONTH && time.day>MONTH)||
+       (time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>HOUR)||
+       (time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>=HOUR && time.minute>MINUTE)
+       ||(time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>=HOUR && time.minute>=MINUTE && time.sec>=SEC))
+    {
+        time.month=time.month-MONTH;
+        if(time.month<0)
+        {
+            time.year--;
+            differ_year(time);
+            time.month+=12;
+        }
+        else differ_year(time);
+    }
+    else
+    {
+        time.month=MONTH-time.month;
+        if(time.month<0)
+        {
+            time.year++;
+            differ_year(time);
+            time.month+=12;
+        }
+        else differ_year(time);
+    }
+}
+
+void Time::differ_year(Time &time)
+{
+    if((time.year>YEAR)||(time.year>=YEAR && time.month>MONTH)||(time.year>=YEAR && time.month>=MONTH && time.day>MONTH)||
+       (time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>HOUR)||
+       (time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>=HOUR && time.minute>MINUTE)
+       ||(time.year>=YEAR && time.month>=MONTH && time.day>=DAY && time.hour>=HOUR && time.minute>=MINUTE && time.sec>=SEC))
+    {
+        time.year=time.year-YEAR;
+    }
+    else
+    {
+        time.year=YEAR-time.year;
+    }
+}
+
+int main()
+{
+    Time time[2];
+    for(int i=0; i<size; i++)
+    {
+        int year, month, day, hour, minute, sec;
+        cout<<"请分别输入年，月，日，时，分，秒:"<<endl;
+        cin>>year>>month>>day>>hour>>minute>>sec;
+        time[i].SetYear(year);
+        time[i].SetMonth(month);
+        time[i].SetDay(day);
+        time[i].SetHour(hour);
+        time[i].SetMinute(minute);
+        time[i].SetSec(sec);
+
+        time[i].differ_sec(time[i]);
+        cout<<"输入时间与预设时间相差";
+        cout<<time[i].GetYear()<<"年"<<time[i].GetMonth()<<"月"<<time[i].GetDay()<<"日"<<time[i].GetHour()<<"小时"<<time[i].GetMinute()
+            <<"分钟"<<time[i].GetSec()<<"秒"<<endl;
+        cout<<"输入时间距"<<YEAR<<"年"<<MONTH<<"月"<<DAY<<"日"<<HOUR<<"时"<<MINUTE<<"分"<<SEC<<"秒日期:"<<convert(time[i])<<"秒!"<<endl<<endl;
+    }
+    return 0;
+}
+
+long long convert(Time &time)
+{
+    time.month+=time.year*12;
+    for(int i=1; i<=time.month; i++)
+        switch (time.month%12)
+        {
+            case 1:time.day+=31;break;
+            case 3:time.day+=31;break;
+            case 5:time.day+=31;break;
+            case 7:time.day+=31;break;
+            case 8:time.day+=31;break;
+            case 10:time.day+=31;break;
+            case 0:time.day+=31;break;
+            case 4:time.day+=30;break;
+            case 6:time.day+=30;break;
+            case 9:time.day+=30;break;
+            case 11:time.day+=30;break;
+            case 2:
+                if((time.year%400==0)||(time.year%4==0&&time.year%100!=0)) {time.day+=29;break;}
+                else {time.day+=28;break;}
+        }
+    time.hour+=time.day*24;
+    time.minute+=time.hour*60;
+    time.sec+=time.minute*60;
+    return time.sec;
+}
