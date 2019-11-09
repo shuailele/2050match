@@ -1,40 +1,124 @@
 #include <iostream>
 using namespace std;
 
+struct Message
+{
+    int n;
+    int m;
+    int k;
+    double a;
+    double b;
+    double c;
+};
+
+void input(Message *p);
+double compare(Message *p);
+void show(double price);
+
 int main() {
-    cout<<"请输入数据组数:"<<endl;
-    int z;
-    cin>>z;
-    for(int j=0; j<z; j++)
-    {
-    int n, m ,k;
-    int *mp;            //用于存储n个学生的所属学校
-    cout<<"请分别输入选手数量、学校数量以及k"<<endl;
-    cin>>n>>m>>k;
-    mp=new int[n];
-    cout<<"请按照成绩从好到差给出"<<n<<"个选手所属学校"<<endl;
+    cout<<"将要输入几组数据:"<<endl;
+    int n;
+    cin>>n;
+    Message *p=new Message[n];
+
+    double price=0;
     for(int i=0; i<n; i++)
-        cin>>mp[i];
-    int PASS=0;
-    int *np;           //用于存储每个学校的学生数量;
-    np=new int[m];
-    for(int i=0; i<m; i++)      //将每个学校的学生数初始化为0
-        np[i]=0;
-    for(int i=0; i<n; i++)         //计算出每个学校的学生数
-        np[mp[i]-1]++;
-    int *np_record;             //用于记录当前学校的学生位置
-    np_record=new int[m];
-    for(int i=0; i<m; i++)
-        np_record[i]=0;
-    for(int i=0; i<n/2; i++)
     {
-        np_record[mp[i]-1]++;
-        if(np_record[mp[i]-1]<=(np[mp[i]-1]/k)) PASS++;
-    }
-    cout<<"发出的PASS有"<<PASS<<"个"<<endl<<endl;
-    delete []mp;
-    delete []np;
-    delete[]np_record;
+        input(p+i);
+    price=compare(p+i);
+    show(price);
     }
     return 0;
+}
+
+void input(Message *p)
+{
+        cout<<"请分别输入男生人数，女生人数，情侣对数，双人间，三人间以及情侣房的价格"<<endl;
+        cin>>p->n>>p->m>>p->k>>p->a>>p->b>>p->c;
+}
+
+double compare(Message *p)
+{
+    double price=0;
+        if((p->c/2<p->a/2) && (p->c/2<p->b/3))
+        {
+            price+=p->k*p->c;
+            if((p->a/2)<=(p->b/3))
+            {
+                if((p->n+p->k)%2!=0) price+=(p->n+p->k)/2*p->a+p->a;
+                else price+=(p->n+p->k)/2*p->a;
+                if(((p->m+p->k)%2!=0)) price+=(p->m+p->k)/2*p->a+p->a;
+                else price+=(p->m+p->k)/2*p->a;
+            }
+            else
+            {
+                if((p->n+p->k)%3!=0)
+                {
+                    if(p->a<=p->b) price+=(p->n+p->k)/3*p->b+p->a;
+                    if(p->a>p->b) price+=(p->n+p->k)/3*p->b+p->b;
+                }
+                else price+=(p->n+p->k)/3*p->b;
+                if((p->m+p->k)%3!=0)
+                {
+                    if(p->a<=p->b) price+=(p->m+p->k)/3*p->b+p->a;
+                    if(p->a>p->b) price+=(p->n+p->k)/3*p->b+p->b;
+                }
+            }
+        }
+
+        else if((p->b/3<=p->c/2) && (p->b/3<p->a/2))
+        {
+            price+=(p->n+p->k)/3*p->b;
+            price+=(p->m+p->k)/3*p->b;
+            int remain_n=(p->n+p->k)%3, remain_m=(p->m+p->k)%3;
+            if((remain_n==1 && remain_m==0) || (remain_n==0 && remain_m==1))
+            {
+                if(p->c<=p->a && p->c<=p->b) price+=p->c;
+                else if(p->b<=p->a && p->b<=p->c) price+=p->b;
+                else if(p->a<=p->b && p->a<=p->c) price+=p->a;
+            }
+            else if((remain_n==2 && remain_m==0) || (remain_n==0 && remain_m==2))
+            {
+                if(2*p->c<=p->a && 2*p->c<=p->b) price+=p->c*2;
+                else if(p->b<=p->a && p->b<=2*p->c) price+=p->b;
+                else if(p->a<=p->b && p->a<=2*p->c) price+=p->a;
+            }
+            else if(remain_n==1 && remain_m==1)
+            {
+                if(p->c<=2*p->a && p->c<=2*p->b) price+=p->c;
+                else if(2*p->b<=2*p->a && 2*p->b<=p->c) price+=p->b*2;
+                else if(2*p->a<=2*p->b && 2*p->a<=p->c) price+=p->a*2;
+            }
+            else
+            {
+                if(2*p->c<=2*p->a && 2*p->c<=2*p->b) price+=p->c*2;
+                else if(2*p->b<=2*p->a && 2*p->b<=2*p->c) price+=p->b*2;
+                else if(2*p->a<=2*p->b && 2*p->a<=2*p->c) price+=p->a*2;
+            }
+        }
+
+        else if(((p->a/2<=p->c/2) && (p->a/2<p->b/3))||((p->a/2<p->c/2) && (p->a/2<=p->b/3)))
+        {
+            price+=(p->n+p->k)/2*p->a;
+            price+=(p->m+p->k)/2*p->a;
+            int remain_n=(p->n+p->k)%2, remain_m=(p->m+p->k)%2;
+            if((remain_n==1 && remain_m==0)||(remain_n==0 && remain_m==1)) price+=p->a;
+            else if(remain_n==1&&remain_m==1)
+            {
+                if(2*p->a<p->c) price+=p->a*2;
+                else price+=p->c;
+            }
+        }
+        else if((p->a/2)==(p->b/3)==(p->c/2))
+        {
+            price+=(p->n+p->m+2*p->k)/2*p->a;
+            if((p->n+p->m+2*p->k)%2!=0) price+=p->a;
+        }
+    return price;
+}
+
+void show(double price)
+{
+    cout<<"所有人住下来的最小花费为:";
+    cout<<price<<endl<<endl;
 }
